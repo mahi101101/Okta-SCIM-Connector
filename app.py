@@ -1,10 +1,6 @@
 import os
 from flask import Flask, request, jsonify
 from waitress import serve
-from redis import Redis
-from redis.exceptions import ConnectionError as RedisConnectionError
-from rq import Queue
-from rq.job import Retry
 from dotenv import load_dotenv
 from logger_config import setup_logging
 
@@ -23,9 +19,6 @@ from adapter import (
 
 # App & Queue Setup
 app = Flask(__name__)
-redis_conn = Redis()
-q = Queue(connection=redis_conn)
-retry_policy = Retry(max=2, interval=[10, 30])
 SCIM_API_TOKEN = os.getenv('SCIM_API_TOKEN')
 
 @app.before_request
