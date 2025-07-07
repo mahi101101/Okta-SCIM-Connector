@@ -1,6 +1,6 @@
 import sys
 from redis import Redis
-from rq import Connection, Worker, Queue
+from rq import Worker, Queue  # Removed 'Connection'
 from logger_config import setup_logging
 
 # Setup Shared Logger
@@ -13,7 +13,8 @@ listen = ['default']
 redis_conn = Redis()
 
 if __name__ == '__main__':
-    with Connection(redis_conn):
-        worker = Worker(map(Queue, listen))
-        logger.info("Worker is starting... listening for jobs on 'default' queue.")
-        worker.work()
+    queues = [Queue(name, connection=redis_conn) for name in listen]
+    worker = Worker(queues, connection=redis_conn)
+    
+    logger.info(f"Worker is starting... listening for jobs on {listen} queue(s).")
+    worker.work()
