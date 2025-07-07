@@ -1,8 +1,4 @@
 Flask
 waitress
 python-dotenv
-okta
-python-ldap
-redis
-rq
 python-json-logger 
